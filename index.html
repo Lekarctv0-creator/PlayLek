@@ -131,10 +131,10 @@ footer a{color:var(--w)}
   <h1 class="title" id="ttl">PLAY<span>LEK</span></h1>
   <p class="slogan"><span id="slo"></span><span class="cur"></span></p>
   <div class="btns">
-    <a class="dl" id="apk" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">Android<small id="apkv">APK · бесплатно</small></a>
-    <a class="dl o" id="msi" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">Windows<small id="msiv">установщик · бесплатно</small></a>
+    <a class="dl" id="apk" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-0.2.14.apk">Android<small id="apkv">APK · бесплатно</small></a>
+    <a class="dl o" id="msi" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18.msi">Windows<small id="msiv">установщик · бесплатно</small></a>
   </div>
-  <p class="sub">без установки: <a id="zip" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">ZIP для Windows</a></p>
+  <p class="sub">без установки: <a id="zip" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18-win.zip">ZIP для Windows</a></p>
 </section>
 
 <div class="big"><div id="bg2"></div></div>
@@ -165,8 +165,8 @@ footer a{color:var(--w)}
   <div class="get rv">
     <p>// файлы берутся из последнего релиза</p>
     <div class="btns">
-      <a class="dl" id="apk2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">Android<small id="apkv2">APK</small></a>
-      <a class="dl o" id="msi2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">Windows<small id="msiv2">MSI</small></a>
+      <a class="dl" id="apk2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-0.2.14.apk">Android<small id="apkv2">APK</small></a>
+      <a class="dl o" id="msi2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18.msi">Windows<small id="msiv2">MSI</small></a>
     </div>
   </div>
 </section>
@@ -174,7 +174,7 @@ footer a{color:var(--w)}
 <footer>PLAYLEK // <a href="https://t.me/one_void">telegram-канал</a> // <a href="https://github.com/Lekarctv0-creator/PlayLek/releases">все версии</a></footer>
 
 <script>
-// Прямые ссылки на последний релиз; при ошибке API кнопки остаются ссылкой на страницу релиза.
+// Кнопки по умолчанию ведут на прямые файлы текущего релиза (работают без скрипта и при блокировке API); скрипт подменяет их на самый свежий релиз.
 fetch("https://api.github.com/repos/Lekarctv0-creator/PlayLek/releases/latest").then(r=>r.json()).then(rel=>{
   const find=re=>(rel.assets||[]).find(a=>re.test(a.name));
   const set=(ids,re,label,vids)=>{const a=find(re);if(!a)return;
