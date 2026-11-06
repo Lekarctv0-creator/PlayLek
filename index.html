@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayLek — музыкальный плеер для Telegram</title>
+<meta name="description" content="PlayLek: твоя музыка из Telegram в красивом плеере для Android и Windows. Тексты песен, коллекции, статистика, совместное прослушивание.">
+<meta property="og:title" content="PlayLek — музыкальный плеер для Telegram">
+<meta property="og:description" content="Скачай PlayLek для Android или Windows одной кнопкой.">
+<meta property="og:image" content="logo.png">
+<link rel="icon" href="logo.png">
+<style>
+  :root { --a: #b388ff; --b: #ff6fb5; --bg: #0b0814; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: #fff; font-family: system-ui, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+  #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+  main { position: relative; z-index: 1; }
+  section { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 20px; }
+  .logo { width: 128px; height: 128px; border-radius: 32px; box-shadow: 0 0 80px #b388ff88; animation: float 4s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-12px) rotate(2deg); } }
+  h1 { font-size: clamp(40px, 8vw, 84px); margin: 24px 0 8px; letter-spacing: -2px;
+       background: linear-gradient(90deg, var(--a), var(--b)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { font-size: clamp(16px, 2.4vw, 22px); color: #cfc7e6; max-width: 620px; line-height: 1.5; margin: 0 0 36px; }
+  .btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  a.dl { display: flex; flex-direction: column; align-items: center; min-width: 240px; padding: 18px 28px; border-radius: 20px; text-decoration: none; color: #fff;
+         background: linear-gradient(135deg, #7c4dff, #ff4fa3); box-shadow: 0 10px 40px #7c4dff55; transition: transform .2s, box-shadow .2s; }
+  a.dl:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 16px 56px #ff4fa388; }
+  a.dl.win { background: linear-gradient(135deg, #2b6cff, #7c4dff); }
+  a.dl b { font-size: 20px; }
+  a.dl small { opacity: .85; margin-top: 4px; font-size: 13px; }
+  .alt { margin-top: 18px; font-size: 14px; color: #a79fc0; }
+  .alt a { color: #d9c7ff; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; max-width: 1000px; width: 100%; margin-top: 32px; }
+  .card { background: #ffffff10; border: 1px solid #ffffff1c; backdrop-filter: blur(14px); border-radius: 22px; padding: 24px; text-align: left; transition: transform .2s; }
+  .card:hover { transform: translateY(-6px); }
+  .card h3 { margin: 0 0 8px; font-size: 18px; }
+  .card p { margin: 0; color: #cfc7e6; line-height: 1.5; font-size: 15px; }
+  h2 { font-size: clamp(28px, 5vw, 44px); margin: 0; }
+  details { max-width: 720px; width: 100%; text-align: left; background: #ffffff10; border: 1px solid #ffffff1c; border-radius: 16px; padding: 14px 20px; margin-top: 12px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: #cfc7e6; line-height: 1.55; margin: 10px 0 0; }
+  footer { position: relative; z-index: 1; text-align: center; color: #8d84a8; padding: 28px; font-size: 14px; }
+  footer a { color: #d9c7ff; }
+  .scroll { margin-top: 40px; color: #a79fc0; text-decoration: none; font-size: 28px; animation: float 2s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<main>
+  <section>
+    <img class="logo" src="logo.png" alt="PlayLek">
+    <h1>PlayLek</h1>
+    <p class="sub">Вся твоя музыка из Telegram в одном красивом плеере. Тексты песен, коллекции, статистика и совместное прослушивание с друзьями.</p>
+    <div class="btns">
+      <a class="dl" id="apk" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest"><b>⬇ Скачать для Android</b><small id="apkv">APK, бесплатно</small></a>
+      <a class="dl win" id="msi" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest"><b>⬇ Скачать для Windows</b><small id="msiv">установщик, бесплатно</small></a>
+    </div>
+    <p class="alt">Нужна версия без установки для Windows? <a id="zip" href="https://github.com/Lekarctv0-creator/PlayLek/releases/latest">Скачать ZIP</a></p>
+    <a class="scroll" href="#features">⌄</a>
+  </section>
+
+  <section id="features">
+    <h2>Что внутри</h2>
+    <div class="grid">
+      <div class="card"><h3>🎵 Музыка из Telegram</h3><p>Треки из твоих каналов появляются в приложении сами. Играют потоком, без долгой загрузки.</p></div>
+      <div class="card"><h3>📝 Тексты песен</h3><p>Строчки бегут вместе с музыкой. Можно поискать песню по словам из текста.</p></div>
+      <div class="card"><h3>❤ Коллекции и избранное</h3><p>Собирай свои подборки. Они сохраняются в облаке и переезжают на новый телефон.</p></div>
+      <div class="card"><h3>📊 Статистика</h3><p>Любимые исполнители, треки и графики по дням недели.</p></div>
+      <div class="card"><h3>👥 Слушать вместе</h3><p>Друг включает песню, ты слышишь её в то же время.</p></div>
+      <div class="card"><h3>🎨 Твой вид</h3><p>Цвет, обои, тёмная и дневная тема, фон по цвету обложки.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Как установить</h2>
+    <details open><summary>Android</summary><p>Нажми «Скачать для Android», открой скачанный файл PlayLek.apk. Если телефон спросит, разреши установку из этого источника (браузера или менеджера файлов) и нажми «Установить». Если видишь «ошибка при анализе пакета», скачай файл ещё раз через Chrome: обычно файл просто не докачался.</p></details>
+    <details><summary>Windows</summary><p>Нажми «Скачать для Windows», запусти установщик .msi. Если Windows покажет синее окно SmartScreen, нажми «Подробнее», потом «Выполнить в любом случае». Версию из ZIP можно просто распаковать и запустить PlayLek.exe.</p></details>
+    <details><summary>Обновления</summary><p>Новые версии приложение предложит скачать само. Эта страница всегда отдаёт самую свежую.</p></details>
+  </section>
+</main>
+<footer>PlayLek · <a href="https://t.me/one_void">Telegram-канал</a> · <a href="https://github.com/Lekarctv0-creator/PlayLek/releases">Все версии</a></footer>
+
+<script>
+// Прямые ссылки: берём последние файлы релиза из GitHub API. Если API недоступен, кнопки ведут на страницу релиза.
+fetch("https://api.github.com/repos/Lekarctv0-creator/PlayLek/releases/latest")
+  .then(r => r.json())
+  .then(rel => {
+    const find = re => (rel.assets || []).find(a => re.test(a.name));
+    const set = (id, vid, re, label) => {
+      const a = find(re); if (!a) return;
+      document.getElementById(id).href = a.browser_download_url;
+      if (vid) document.getElementById(vid).textContent = label + ", " + (a.size / 1048576).toFixed(0) + " МБ";
+    };
+    set("apk", "apkv", /\.apk$/i, "APK");
+    set("msi", "msiv", /\.msi$/i, "установщик");
+    set("zip", null, /\.zip$/i);
+  })
+  .catch(() => {});
+
+// 3D-фон: вращающаяся сфера из точек, кольца-пластинки и звёзды, реагируют на мышь и прокрутку.
+(() => {
+  const c = document.getElementById("bg"), g = c.getContext("2d");
+  let W, H, mx = 0, my = 0, t = 0;
+  const resize = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
+  addEventListener("resize", resize); resize();
+  addEventListener("pointermove", e => { mx = e.clientX / W - .5; my = e.clientY / H - .5; });
+  const N = 700, pts = [];
+  for (let i = 0; i < N; i++) {
+    const y = 1 - 2 * (i + .5) / N, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+    pts.push([Math.cos(th) * r, y, Math.sin(th) * r]);
+  }
+  const stars = Array.from({ length: 120 }, () => [Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 + .2]);
+  const proj = (x, y, z, ax, ay, s, ox, oy) => {
+    let cx = Math.cos(ay), sx = Math.sin(ay);
+    let x1 = x * cx + z * sx, z1 = -x * sx + z * cx;
+    cx = Math.cos(ax); sx = Math.sin(ax);
+    let y1 = y * cx - z1 * sx, z2 = y * sx + z1 * cx;
+    const f = 2.4 / (2.4 + z2);
+    return [ox + x1 * s * f, oy + y1 * s * f, z2, f];
+  };
+  const frame = () => {
+    t += .005;
+    g.clearRect(0, 0, W, H);
+    for (const s of stars) {
+      const x = ((s[0] * W * .5 + W / 2 + t * 20 * s[2] * 10) % W + W) % W, y = s[1] * H * .5 + H / 2 - scrollY * .1 * s[2];
+      g.fillStyle = "rgba(255,255,255," + (.15 + .2 * s[2] / 2.2) + ")";
+      g.fillRect(x, ((y % H) + H) % H, s[2], s[2]);
+    }
+    const sc = Math.min(W, H) * .42, ox = W / 2 + mx * 60, oy = H / 2 + my * 40 - scrollY * .15;
+    const ay = t + mx * 1.2, ax = .5 + my * .8 + scrollY * .0008;
+    for (const p of pts) {
+      const [x, y, z, f] = proj(p[0], p[1], p[2], ax, ay, sc, ox, oy);
+      const h = (p[1] * 60 + t * 60 + 270) % 360;
+      g.fillStyle = "hsla(" + h + ",90%,70%," + (.25 + .5 * (1 - (z + 1) / 2)) + ")";
+      g.beginPath(); g.arc(x, y, 1.2 + 1.8 * f, 0, 6.3); g.fill();
+    }
+    // кольца вокруг сферы, как дорожки пластинки
+    for (let k = 0; k < 3; k++) {
+      g.beginPath();
+      for (let i = 0; i <= 90; i++) {
+        const a = i / 90 * 6.2832, R = 1.35 + k * .22;
+        const [x, y] = proj(Math.cos(a) * R, 0, Math.sin(a) * R, ax + .3 * k, ay * (k % 2 ? -1 : 1) * .6, sc, ox, oy);
+        i ? g.lineTo(x, y) : g.moveTo(x, y);
+      }
+      g.strokeStyle = "rgba(179,136,255," + (.28 - k * .07) + ")"; g.lineWidth = 1.5; g.stroke();
+    }
+    requestAnimationFrame(frame);
+  };
+  frame();
+})();
+</script>
+</body>
+</html>
