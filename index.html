@@ -131,10 +131,9 @@ footer a{color:var(--w)}
   <h1 class="title" id="ttl">PLAY<span>LEK</span></h1>
   <p class="slogan"><span id="slo"></span><span class="cur"></span></p>
   <div class="btns">
-    <a class="dl" id="apk" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.17-pc1.2.18/PlayLek-0.2.17.apk">Android<small id="apkv">APK · бесплатно</small></a>
-    <a class="dl o" id="msi" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18.msi">Windows<small id="msiv">установщик · бесплатно</small></a>
+    <a class="dl" id="apk" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.18-pc1.3.0/PlayLek-0.2.18.apk">Android<small id="apkv">APK · бесплатно</small></a>
+    <a class="dl o" id="exe" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.18-pc1.3.0/PlayLek-Setup-1.3.0.exe">Windows<small id="exev">установщик · бесплатно</small></a>
   </div>
-  <p class="sub">без установки: <a id="zip" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18-win.zip">ZIP для Windows</a></p>
 </section>
 
 <div class="big"><div id="bg2"></div></div>
@@ -155,7 +154,7 @@ footer a{color:var(--w)}
   <h2>Установка<em>導入</em></h2>
   <div class="steps">
     <div class="s rv"><b>01</b><h3>Android</h3><p>Скачай APK и открой файл. Разреши установку из этого источника и нажми «Установить». Если пишет «ошибка при анализе пакета», скачай файл ещё раз через Chrome: он, скорее всего, не докачался.</p></div>
-    <div class="s rv"><b>02</b><h3>Windows</h3><p>Запусти .msi. Если Windows покажет синее окно SmartScreen, нажми «Подробнее», затем «Выполнить в любом случае». ZIP достаточно распаковать и запустить PlayLek.exe.</p></div>
+    <div class="s rv"><b>02</b><h3>Windows</h3><p>Запусти PlayLek-Setup.exe и следуй шагам установщика. Если Windows покажет синее окно SmartScreen, нажми «Подробнее», затем «Выполнить в любом случае».</p></div>
     <div class="s rv"><b>03</b><h3>Обновления</h3><p>Новые версии приложение предложит скачать само. Эта страница всегда отдаёт самую свежую.</p></div>
   </div>
 </section>
@@ -165,8 +164,8 @@ footer a{color:var(--w)}
   <div class="get rv">
     <p>// файлы берутся из последнего релиза</p>
     <div class="btns">
-      <a class="dl" id="apk2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.17-pc1.2.18/PlayLek-0.2.17.apk">Android<small id="apkv2">APK</small></a>
-      <a class="dl o" id="msi2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.14-pc1.2.18/PlayLek-1.2.18.msi">Windows<small id="msiv2">MSI</small></a>
+      <a class="dl" id="apk2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.18-pc1.3.0/PlayLek-0.2.18.apk">Android<small id="apkv2">APK</small></a>
+      <a class="dl o" id="exe2" href="https://github.com/Lekarctv0-creator/PlayLek/releases/download/v0.2.18-pc1.3.0/PlayLek-Setup-1.3.0.exe">Windows<small id="exev2">установщик</small></a>
     </div>
   </div>
 </section>
@@ -175,14 +174,19 @@ footer a{color:var(--w)}
 
 <script>
 // Кнопки по умолчанию ведут на прямые файлы текущего релиза (работают без скрипта и при блокировке API); скрипт подменяет их на самый свежий релиз.
-fetch("https://api.github.com/repos/Lekarctv0-creator/PlayLek/releases/latest").then(r=>r.json()).then(rel=>{
-  const find=re=>(rel.assets||[]).find(a=>re.test(a.name));
-  const set=(ids,re,label,vids)=>{const a=find(re);if(!a)return;
-    ids.forEach(i=>document.getElementById(i).href=a.browser_download_url);
-    vids.forEach(i=>document.getElementById(i).textContent=label+" · "+(a.size/1048576).toFixed(0)+" МБ · "+(rel.tag_name||"").split("-")[0]);};
-  set(["apk","apk2"],/\.apk$/i,"APK",["apkv","apkv2"]);
-  set(["msi","msi2"],/\.msi$/i,"MSI",["msiv","msiv2"]);
-  const z=find(/\.zip$/i);if(z)document.getElementById("zip").href=z.browser_download_url;
+const API="https://api.github.com/repos/Lekarctv0-creator/PlayLek/releases";
+const J=u=>fetch(u).then(r=>r.ok?r.json():Promise.reject());
+// Каждый ассет ищем независимо: сначала в latest, если там его нет, то в самом свежем релизе из списка.
+const pick=(rels,re)=>{for(const rel of rels){const a=(rel.assets||[]).find(a=>re.test(a.name));if(a)return{a,rel}}};
+const set=(ids,vids,label,hit)=>{if(!hit)return;
+  ids.forEach(i=>document.getElementById(i).href=hit.a.browser_download_url);
+  vids.forEach(i=>document.getElementById(i).textContent=label+" · "+(hit.a.size/1048576).toFixed(0)+" МБ · "+(label==="установщик"?"v"+((hit.a.name.match(/(\d+(?:\.\d+)+)/)||[])[1]||""):(hit.rel.tag_name||"").split("-")[0]));};
+const apply=rels=>{
+  set(["apk","apk2"],["apkv","apkv2"],"APK",pick(rels,/\.apk$/i));
+  set(["exe","exe2"],["exev","exev2"],"установщик",pick(rels,/^PlayLek-Setup-.*\.exe$/i));};
+J(API+"/latest").then(l=>{
+  apply([l]);
+  if(!pick([l],/\.apk$/i)||!pick([l],/^PlayLek-Setup-.*\.exe$/i))J(API+"?per_page=20").then(r=>apply([l,...r.filter(x=>!x.draft&&!x.prerelease&&x.id!==l.id)])).catch(()=>{});
 }).catch(()=>{});
 
 // Бегущие строки (текст дублируется, чтобы цикл был бесшовным).
